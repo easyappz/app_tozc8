@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -18,6 +19,7 @@ class HelloView(APIView):
     """
     A simple API endpoint that returns a greeting message.
     """
+    permission_classes = [AllowAny]
 
     @extend_schema(
         responses={200: MessageSerializer}, description="Get a hello world message"
@@ -30,6 +32,7 @@ class HelloView(APIView):
 
 class RegistrationView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
     
     @extend_schema(
         request=RegistrationSerializer,
@@ -54,6 +57,7 @@ class RegistrationView(APIView):
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
     
     @extend_schema(
         request=LoginSerializer,
@@ -78,6 +82,7 @@ class LoginView(APIView):
 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     
     @extend_schema(
         responses={200: UserSerializer},
@@ -104,6 +109,7 @@ class ProfileView(APIView):
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     
     @extend_schema(
         request=None,
